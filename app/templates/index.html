@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block title %}Página Inicial{% endblock %}
+
+{% block content %}
+<!-- Container principal para conteúdo da página inicial -->
+<div class="container-fluid mt-5">
+    <!-- Seção para entrada de URL de documento e exibição de créditos disponíveis -->
+    <div class="row">
+        <div class="col-lg-12 mb-4">
+            <div class="card">
+                <div class="card-header bg-transparent">
+                    <h5 class="mb-0">Créditos: {{ credits }}</h5> <!-- Número de créditos dinâmico -->
+                </div>
+                <div class="card-body">
+                    <form action="{{ url_for('main.upload_link') }}" method="post">
+                        <div class="form-group">
+                            <label for="documentUrl">URL do Documento</label>
+                            <input type="url" class="form-control" id="documentUrl" name="documentUrl" placeholder="Insira a URL" required>
+                            <button type="submit" class="btn btn-primary mt-3">Enviar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabela para visualizar arquivos que estão sendo processados -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header bg-transparent">
+                    <h5 class="mb-0">Arquivos em Processamento</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table align-items-center table-flush">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">Link</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Data</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for file in files_in_process %}
+                                <tr>
+                                    <td>{{ file.link }}</td>
+                                    <td>{{ file.status }}</td>
+                                    <td>{{ file.timestamp }}</td> <!-- Assuming 'timestamp' for file date -->
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nova seção para arquivos prontos para download -->
+    <div class="row mt-4">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header bg-transparent">
+                    <h5 class="mb-0">Arquivos Prontos para Download</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table align-items-center table-flush">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">Link</th>
+                                    <th scope="col">Data</th>
+                                    <th scope="col">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for file in files_ready %}
+                                <tr>
+                                    <td>{{ file.link }}</td>
+                                    <td>{{ file.timestamp }}</td> <!-- Assuming 'timestamp' for file date -->
+                                    <td><a href="{{ file.link }}" class="btn btn-success" download>Download</a></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

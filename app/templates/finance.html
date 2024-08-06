@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Financeiro{% endblock %}
+
+{% block content %}
+<div class="user-profile d-flex justify-content-end">
+    <img src="{{ url_for('static', filename='uploads/' ~ current_user.profile_pic) }}" alt="Perfil" class="profile-pic">
+    <div class="dropdown-menu">
+        <a href="{{ url_for('main.profile') }}">Perfil</a>
+        <a href="{{ url_for('auth.logout') }}">Logout</a>
+    </div>
+</div>
+<h2>Gestão Financeira</h2>
+<div class="card mb-4">
+    <div class="card-header">Adicionar Créditos</div>
+    <div class="card-body">
+        <form action="{{ url_for('main.add_credits') }}" method="post">
+            <div class="form-group">
+                <label for="user_id">ID do Usuário</label>
+                <input type="text" class="form-control" id="user_id" name="user_id" required>
+            </div>
+            <div class="form-group">
+                <label for="credits">Créditos</label>
+                <input type="number" class="form-control" id="credits" name="credits" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Adicionar</button>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">Histórico de Transações</div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Descrição</th>
+                        <th>Quantia</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transaction in transactions %}
+                    <tr>
+                        <td>{{ transaction.timestamp }}</td>
+                        <td>{{ transaction.description }}</td>
+                        <td>{{ transaction.amount }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
