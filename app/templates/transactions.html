@@ -15,24 +15,21 @@
     <div class="card-header">Transações</div>
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Data</th>
-                        <th>Descrição</th>
-                        <th>Quantia</th>
-                    </tr>
-                </thead>
-                <tbody>
+            <tbody>
+                {% if transactions %}
                     {% for transaction in transactions %}
                     <tr>
-                        <td>{{ transaction.timestamp }}</td>
+                        <td>{{ transaction.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
                         <td>{{ transaction.description }}</td>
                         <td>{{ transaction.amount }}</td>
                     </tr>
                     {% endfor %}
-                </tbody>
-            </table>
+                {% else %}
+                    <tr>
+                        <td colspan="3">Nenhuma transação encontrada.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
         </div>
     </div>
 </div>

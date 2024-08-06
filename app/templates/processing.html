@@ -39,6 +39,34 @@
                     <a href="{{ url_for('auth.logout') }}">Logout</a>
                 </div>
             </div>
+
+            <h2>Logs de Upload</h2>
+            <div class="card mb-4">
+                <div class="card-header">Arquivos Enviados</div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Nome do Arquivo</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for log in logs %}
+                                <tr>
+                                    <td>{{ log.upload_date.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                                    <td>{{ log.filename }}</td>
+                                    <td>{{ log.status }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
             <h2>Links em Processamento</h2>
             <div class="card">
                 <div class="card-header">Links Enviados</div>
@@ -67,6 +95,7 @@
             </div>
         </div>
     </div>
+    <script src="app/static/js/scripts.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

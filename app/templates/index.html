@@ -3,9 +3,25 @@
 {% block title %}Página Inicial{% endblock %}
 
 {% block content %}
+<!-- Exibir mensagens de flash -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="container mt-3">
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
 <!-- Container principal para conteúdo da página inicial -->
 <div class="container-fluid mt-5">
-    <!-- Seção para entrada de URL de documento e exibição de créditos disponíveis -->
+    <!-- Seção para upload de arquivo e exibição de créditos disponíveis -->
     <div class="row">
         <div class="col-lg-12 mb-4">
             <div class="card">
@@ -13,10 +29,10 @@
                     <h5 class="mb-0">Créditos: {{ credits }}</h5> <!-- Número de créditos dinâmico -->
                 </div>
                 <div class="card-body">
-                    <form action="{{ url_for('main.upload_link') }}" method="post">
+                    <form action="{{ url_for('main.upload_file') }}" method="post" enctype="multipart/form-data">
                         <div class="form-group">
-                            <label for="documentUrl">URL do Documento</label>
-                            <input type="url" class="form-control" id="documentUrl" name="documentUrl" placeholder="Insira a URL" required>
+                            <label for="file">Upload de Arquivo ZIP</label>
+                            <input type="file" class="form-control" id="file" name="file" accept=".zip, .rar, .RAR, .ZIP" required>
                             <button type="submit" class="btn btn-primary mt-3">Enviar</button>
                         </div>
                     </form>
@@ -25,7 +41,7 @@
         </div>
     </div>
 
-    <!-- Tabela para visualizar arquivos que estão sendo processados -->
+    <!-- Tabela para visualizar o histórico de uploads -->
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
@@ -37,50 +53,25 @@
                         <table class="table align-items-center table-flush">
                             <thead class="thead-light">
                                 <tr>
-                                    <th scope="col">Link</th>
+                                    <th scope="col">Nome do Arquivo</th>
                                     <th scope="col">Status</th>
-                                    <th scope="col">Data</th>
+                                    <th scope="col">Data de Upload</th>
+                                    <th scope="col">Link de Download</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for file in files_in_process %}
                                 <tr>
-                                    <td>{{ file.link }}</td>
+                                    <td>{{ file.filename }}</td>
                                     <td>{{ file.status }}</td>
-                                    <td>{{ file.timestamp }}</td> <!-- Assuming 'timestamp' for file date -->
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Nova seção para arquivos prontos para download -->
-    <div class="row mt-4">
-        <div class="col-lg-12">
-            <div class="card">
-                <div class="card-header bg-transparent">
-                    <h5 class="mb-0">Arquivos Prontos para Download</h5>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table align-items-center table-flush">
-                            <thead class="thead-light">
-                                <tr>
-                                    <th scope="col">Link</th>
-                                    <th scope="col">Data</th>
-                                    <th scope="col">Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for file in files_ready %}
-                                <tr>
-                                    <td>{{ file.link }}</td>
-                                    <td>{{ file.timestamp }}</td> <!-- Assuming 'timestamp' for file date -->
-                                    <td><a href="{{ file.link }}" class="btn btn-success" download>Download</a></td>
+                                    <td>{{ file.upload_date.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                                    <td>
+                                        {% if file.download_link %}
+                                            <a href="{{ file.download_link }}" class="btn btn-link">Download</a>
+                                        {% else %}
+                                            Em processamento...
+                                        {% endif %}
+                                    </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
