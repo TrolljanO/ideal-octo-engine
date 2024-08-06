@@ -1,0 +1,84 @@
+nohup: ignoring input
+ * Serving Flask app 'run.py'
+ * Debug mode: off
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.28.82:5000
+Press CTRL+C to quit
+179.193.65.45 - - [06/Aug/2024 01:12:50] "GET / HTTP/1.1" 302 -
+179.193.65.45 - - [06/Aug/2024 01:12:50] "GET /login?next=/ HTTP/1.1" 200 -
+179.193.65.45 - - [06/Aug/2024 01:12:50] "GET /static/css/styles.css HTTP/1.1" 200 -
+179.193.65.45 - - [06/Aug/2024 01:12:50] "GET /static/logo.png HTTP/1.1" 404 -
+179.193.65.45 - - [06/Aug/2024 01:12:51] "GET /favicon.ico HTTP/1.1" 404 -
+179.193.65.45 - - [06/Aug/2024 01:12:56] "GET /signup HTTP/1.1" 200 -
+179.193.65.45 - - [06/Aug/2024 01:12:56] "GET /static/css/styles.css HTTP/1.1" 304 -
+[2024-08-06 01:13:06,327] ERROR in app: Exception on /signup [POST]
+Traceback (most recent call last):
+  File "/root/app/ideal-octo-engine/venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "/root/app/ideal-octo-engine/venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.OperationalError: no such table: user
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/root/app/ideal-octo-engine/venv/lib/python3.12/site-packages/flask/app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/app/ideal-octo-engine/venv/lib/python3.12/site-packages/flask/app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/app/ideal-octo-engine/venv/lib/python3.12/site-packages/flask/app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/app/ideal-octo-engine/venv/lib/python3.12/site-packages/flask/app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/app/ideal-octo-engine/app/auth.py", line 38, in signup_post
+    user = User.query.filter_by(email=email).first()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/app/ideal-octo-engine/venv/lib/python3.12/site-packages/sqlalchemy/orm/query.py", line 2728, in first
+    return self.limit(1)._iter().first()  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/app/ideal-octo-engine/venv/lib/python3.12/site-packages/sqlalchemy/orm/query.py", line 2827, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/app/ideal-octo-engine/venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 2351, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/app/ideal-octo-engine/venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 2236, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/app/ideal-octo-engine/venv/lib/python3.12/site-packages/sqlalchemy/orm/context.py", line 293, in orm_execute_statement
+    result = conn.execute(
+             ^^^^^^^^^^^^^
+  File "/root/app/ideal-octo-engine/venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1418, in execute
+    return meth(
+           ^^^^^
+  File "/root/app/ideal-octo-engine/venv/lib/python3.12/site-packages/sqlalchemy/sql/elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/app/ideal-octo-engine/venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1640, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/app/ideal-octo-engine/venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/app/ideal-octo-engine/venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/root/app/ideal-octo-engine/venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2353, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/root/app/ideal-octo-engine/venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "/root/app/ideal-octo-engine/venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such table: user
+[SQL: SELECT user.id AS user_id, user.email AS user_email, user.password AS user_password, user.username AS user_username, user.credits AS user_credits, user.is_admin AS user_is_admin, user.profile_pic AS user_profile_pic 
+FROM user 
+WHERE user.email = ?
+ LIMIT ? OFFSET ?]
+[parameters: ('trajanogui@hotmail.com', 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+179.193.65.45 - - [06/Aug/2024 01:13:06] "POST /signup HTTP/1.1" 500 -
