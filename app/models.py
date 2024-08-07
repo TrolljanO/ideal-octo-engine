@@ -7,6 +7,8 @@ from datetime import datetime
 import uuid
 from sqlalchemy.sql import func
 from . import db
+from sqlalchemy import UniqueConstraint
+
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -17,6 +19,7 @@ class User(UserMixin, db.Model):
     transactions = db.relationship('Transaction', backref='user', lazy=True)
     is_admin = db.Column(db.Boolean, default=False)
     profile_pic = db.Column(db.String(100), nullable=True)
+    file_logs = db.relationship('FileLog', backref='User', lazy=True)
 
 class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -43,6 +46,9 @@ class File(db.Model):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+
+from sqlalchemy import UniqueConstraint
+
 class FileLog(db.Model):
     id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -50,9 +56,4 @@ class FileLog(db.Model):
     upload_date = db.Column(db.DateTime, default=datetime.utcnow)
     s3_key = db.Column(db.String(255), nullable=False)
     status = db.Column(db.String(50), nullable=False, default='Iniciando')
-
-    def __init__(self, user_id, filename, s3_key, status='Iniciando'):
-        self.user_id = user_id
-        self.filename = filename
-        self.s3_key = s3_key
-        self.status = status
+    download_link = db.Column(db.String(255), nullable=True)

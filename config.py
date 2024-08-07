@@ -4,14 +4,13 @@ import boto3
 
 base_dir = os.path.abspath(os.path.dirname(__file__))
 
+# Carregar variáveis de ambiente do arquivo .env
+load_dotenv()
 
 class Config:
-
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(base_dir, 'instance', 'limpapasta.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SECRET_KEY = '-q9jKRX-1koTFm5_gsPOSsdkxFpBMPifn_lF4VeORJKmNnjw_sLrKqMcbhgmu5uotcw'  # Substitua 'your_secret_key' por uma chave secreta real
-
-load_dotenv()
+    SECRET_KEY = os.getenv('SECRET_KEY')
 
 s3 = boto3.client(
     's3',

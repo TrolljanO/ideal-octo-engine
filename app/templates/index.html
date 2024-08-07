@@ -29,7 +29,7 @@
                     <h5 class="mb-0">Créditos: {{ credits }}</h5> <!-- Número de créditos dinâmico -->
                 </div>
                 <div class="card-body">
-                    <form action="{{ url_for('main.upload_file') }}" method="post" enctype="multipart/form-data">
+                    <form id="uploadForm" action="{{ url_for('main.upload_file') }}" method="post" enctype="multipart/form-data">
                         <div class="form-group">
                             <label for="file">Upload de Arquivo ZIP</label>
                             <input type="file" class="form-control" id="file" name="file" accept=".zip, .rar, .RAR, .ZIP" required>
@@ -63,7 +63,15 @@
                                 {% for file in files_in_process %}
                                 <tr>
                                     <td>{{ file.filename }}</td>
-                                    <td>{{ file.status }}</td>
+                                    <td>
+                                        {{ file.status }}
+                                        {% if file.status == 'Fazendo Upload' %}
+                                        {% elif file.status == 'Calculando' %}
+                                            Calculando...
+                                        {% elif file.status == 'Autorizando' %}
+                                            Autorizando...
+                                        {% endif %}
+                                    </td>
                                     <td>{{ file.upload_date.strftime('%Y-%m-%d %H:%M:%S') }}</td>
                                     <td>
                                         {% if file.download_link %}
@@ -81,6 +89,6 @@
             </div>
         </div>
     </div>
-
 </div>
+
 {% endblock %}
