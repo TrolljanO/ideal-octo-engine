@@ -4,11 +4,10 @@ import boto3
 
 base_dir = os.path.abspath(os.path.dirname(__file__))
 
-# Carregar variáveis de ambiente do arquivo .env
 load_dotenv()
 
 class Config:
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(base_dir, 'instance', 'limpapasta.db')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URI')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SECRET_KEY = os.getenv('SECRET_KEY')
 
