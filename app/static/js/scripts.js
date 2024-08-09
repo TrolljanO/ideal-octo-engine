@@ -73,80 +73,43 @@ form.addEventListener('submit', function(e) {
         }
     };
 
-    xhr.onload = function() {
-        if (xhr.status === 200) {
-            // Exibir o próximo status "Calculando..."
-        } else {
-            alert('Erro no upload.');
-        }
-    };
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                const response = JSON.parse(xhr.responseText);
+                const custo = response.custo;
 
-    xhr.send(formData);
-});
+                // Exibe o custo e as opções de autorização
+                const userConfirmation = confirm(`Valor do processamento: R$ ${custo}. Deseja autorizar?`);
+                if (userConfirmation) {
+                    // Enviar confirmação para o servidor
+                    authorizeProcessing(response.file_id, custo);
+                } else {
+                    // Cancelar o processo
+                    cancelProcessing(response.file_id);
+                }
+            } else {
+                alert('Erro no upload.');
+            }
+        };
 
-xhr.onload = function() {
-    if (xhr.status === 200) {
-        const response = JSON.parse(xhr.responseText);
-        const custo = response.custo;
-        // Exibir pop-up
-        const userConfirmation = confirm(`Valor do processamento: R$ ${custo}`);
-        if (userConfirmation) {
-            // Enviar confirmação para o servidor
-        } else {
-            // Cancelar o processo
+
+xhr.upload.onprogress = function(event) {
+    if (event.lengthComputable) {
+        const percentComplete = (event.loaded / event.total) * 100;
+        progressBar.style.width = percentComplete + '%';
+        progressBar.setAttribute('aria-valuenow', percentComplete);
+        progressBar.textContent = Math.floor(percentComplete) + '%';
+
+        // Simulação de processamento
+        if (percentComplete === 100) {
+            setTimeout(() => {
+                progressBar.classList.add('bg-info');
+                progressBar.textContent = 'Processando...';
+            }, 500); // Aguarde 500ms antes de exibir "Processando..."
         }
-    } else {
-        alert('Erro no upload.');
     }
 };
 
-function updateProgressBar(fileId, percentage) {
-    const progressBar = document.getElementById(`progress-bar-${fileId}`);
-    if (progressBar) {
-        progressBar.style.width = `${percentage}%`;
-        progressBar.setAttribute('aria-valuenow', percentage);
-        progressBar.textContent = `${percentage}%`;
-    }
-}
 
-function showCostPopup(custo, fileId) {
-    if (confirm(`Valor do processamento: R$ ${custo}. Deseja continuar?`)) {
-        // Usuário aceitou o custo
-        authorizeProcessing(fileId, custo);
-    } else {
-        // Usuário recusou o custo
-        cancelProcessing(fileId);
-    }
-}
-
-function authorizeProcessing(fileId, custo) {
-    fetch('/api/authorize', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ file_id: fileId, custo: custo }),
-    }).then(response => response.json())
-      .then(data => {
-          if (data.status === 'Autorizado') {
-              // Continue o processamento
-              startProcessing(fileId);
-          } else {
-              alert('Saldo insuficiente.');
-          }
-      });
-}
-
-function cancelProcessing(fileId) {
-    fetch('/api/cancel', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ file_id: fileId }),
-    }).then(response => response.json())
-      .then(data => {
-          alert('Processamento cancelado.');
-      });
-}
-
+    xhr.send(formData);
+});
