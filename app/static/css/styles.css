@@ -206,3 +206,18 @@ i {
     align-items: center;
     backdrop-filter: blur(5px);
 }
+
+#profile-img {
+    border-bottom-right-radius: 10px;
+    border-top-left-radius: 10px;
+}
+
+#amount #recharge-btn{
+    position: relative;
+    object-position: center;
+}
+
+#amount {
+    max-width: 40%;
+}
+

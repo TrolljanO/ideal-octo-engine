@@ -26,7 +26,24 @@ class Transaction(db.Model):
     timestamp = db.Column(db.DateTime, default=func.now())
     amount = db.Column(db.Integer, nullable=False)
     description = db.Column(db.String(200), nullable=False)
+    payment_type = db.Column(db.String(50), nullable=True)
+    reference = db.Column(db.String(255), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    file_log_id = db.Column(db.Integer, db.ForeignKey('file_log.id'), nullable=True)
+    file_log = db.relationship('FileLog', backref='transactions')
+    status = db.Column(db.String(50), nullable=False, default='Pendente')
+    correlation_id = db.Column(db.String(255), nullable=False)
+
+    def formatted_amount(self):
+        return f"R$ {self.amount / 100:.2f}"
+
+
+def __init__(self, user_id, amount, description, status, correlation_id):
+    self.user_id = user_id
+    self.amount = amount
+    self.description = description
+    self.status = status
+    self.correlation_id = correlation_id
 
 
 class File(db.Model):
@@ -50,6 +67,7 @@ def load_user(user_id):
 
 
 from . import db
+
 
 class FileLog(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
