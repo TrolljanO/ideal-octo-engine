@@ -1,25 +1,19 @@
-"""
-Database models for the Flask app.
-"""
 from flask_login import UserMixin
 from app import login
 from datetime import datetime
-import uuid
 from sqlalchemy.sql import func
 from . import db
 
-
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.VARCHAR(255), unique=True)
-    password = db.Column(db.VARCHAR(255))
-    username = db.Column(db.VARCHAR(255))
+    email = db.Column(db.String(255), unique=True, nullable=False)
+    password = db.Column(db.String(255), nullable=False)
+    username = db.Column(db.String(255), nullable=False)
     credits = db.Column(db.Integer, default=0)
     transactions = db.relationship('Transaction', backref='user', lazy=True)
     is_admin = db.Column(db.Boolean, default=False)
     profile_pic = db.Column(db.String(255), nullable=True)
-    file_logs = db.relationship('FileLog', backref='User', lazy=True)
-
+    files = db.relationship('File', backref='user', lazy=True)  # Relação com File
 
 class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -29,22 +23,12 @@ class Transaction(db.Model):
     payment_type = db.Column(db.String(50), nullable=True)
     reference = db.Column(db.String(255), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    file_log_id = db.Column(db.Integer, db.ForeignKey('file_log.id'), nullable=True)
-    file_log = db.relationship('FileLog', backref='transactions')
+    file_id = db.Column(db.Integer, db.ForeignKey('file.id'), nullable=True)
     status = db.Column(db.String(50), nullable=False, default='Pendente')
     correlation_id = db.Column(db.String(255), nullable=False)
 
     def formatted_amount(self):
         return f"R$ {self.amount / 100:.2f}"
-
-
-def __init__(self, user_id, amount, description, status, correlation_id):
-    self.user_id = user_id
-    self.amount = amount
-    self.description = description
-    self.status = status
-    self.correlation_id = correlation_id
-
 
 class File(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -53,30 +37,20 @@ class File(db.Model):
     status = db.Column(db.String(50), nullable=False, default='Iniciando')
     upload_date = db.Column(db.DateTime, default=datetime.utcnow)
     s3_key = db.Column(db.String(255), nullable=False)
-    download_link = db.Column(db.String(255), nullable=True)  # Pode ser null até que o link seja gerado
+    download_link = db.Column(db.String(255), nullable=True)
+    cost = db.Column(db.Float, nullable=True)
+    qr_code = db.Column(db.Text, nullable=True)
 
-    def __init__(self, user_id, filename, s3_key):
+    def __init__(self, user_id, filename, s3_key, status='Iniciando', cost=None):
         self.user_id = user_id
         self.filename = filename
         self.s3_key = s3_key
+        self.status = status
+        self.cost = cost
 
+    def __repr__(self):
+        return f'<File {self.filename}>'
 
 @login.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
-
-
-from . import db
-
-
-class FileLog(db.Model):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    filename = db.Column(db.String(255), nullable=False)
-    s3_key = db.Column(db.String(255), nullable=False)
-    status = db.Column(db.String(50), nullable=False)
-    cost = db.Column(db.Float, nullable=True)
-    upload_date = db.Column(db.DateTime, default=db.func.current_timestamp())
-
-    def __repr__(self):
-        return f'<FileLog {self.filename}>'

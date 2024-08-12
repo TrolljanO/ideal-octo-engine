@@ -81,32 +81,58 @@ $(document).ready(function () {
     });
 });
 
-function showPixModal(fileId, cost) {
-    document.getElementById('modalPixAmount').textContent = `R$ ${cost.toFixed(2).replace('.', ',')}`;
-    document.getElementById('confirmPixBtn').onclick = function() {
-        generatePix(fileId, cost);
-    };
+function showPixModal(file_id, cost) {
+    let costInReais = (cost / 100).toFixed(2);
+    document.getElementById('modalPixAmount').textContent = `R$ ${costInReais}`;
+    document.getElementById('qrCodeImage').src = '';  // Limpa a imagem antiga do QR Code
+    document.getElementById('qrCodeImage').style.display = 'none';  // Esconde a imagem do QR Code
+    document.getElementById('qrCodeMessage').textContent = 'Gerando o QR Code...';  // Mensagem enquanto gera o QR Code
 
-    const pixModal = new bootstrap.Modal(document.getElementById('pixModal'));
-    pixModal.show();
+    $('#pixModal').modal('show');
+
+    generatePix(file_id, cost);
 }
 
-function generatePix(fileId, amountInCents) {
+// Adiciona a função de fechamento ao botão "Cancelar" e ao "Close"
+document.getElementById('confirmPixBtn').onclick = function () {
+    $('#pixModal').modal('hide');  // Fecha o modal
+};
+
+document.getElementById('cancelPixBtn').onclick = function () {
+    $('#pixModal').modal('hide');  // Fecha o modal
+};
+
+function generatePix(fileId, cost) {
+    let payload = {
+        value: cost,
+        correlationID: generateUUID(),
+        name: `Pagamento do arquivo ${fileId}`,
+        comment: `Pagto arquivo ID ${fileId}`
+    };
+
     const xhr = new XMLHttpRequest();
-    xhr.open('POST', `/generate_pix/${fileId}`, true);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.open("POST", `/generate_pix/${fileId}`, true);
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhr.onload = function () {
         if (xhr.status === 200) {
             const response = JSON.parse(xhr.responseText);
             if (response.qr_code) {
-                alert('PIX gerado com sucesso!');
-                window.location.reload();
-            } else {
-                alert('Erro ao gerar o PIX.');
+                document.getElementById('qrCodeImage').src = response.qr_code;
+                document.getElementById('qrCodeImage').style.display = 'block';  // Mostra a imagem do QR Code
+                document.getElementById('qrCodeMessage').textContent = '';  // Limpa a mensagem
             }
         } else {
-            alert('Erro ao processar a requisição.');
+            document.getElementById('qrCodeMessage').textContent = 'Erro ao gerar o QR Code. Tente novamente.';
         }
     };
-    xhr.send(`custo=${amountInCents}`);  // Envia o valor em centavos para a API
+    xhr.send(JSON.stringify(payload));
+}
+
+
+// Função auxiliar para gerar UUID
+function generateUUID() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
 }
