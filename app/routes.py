@@ -17,12 +17,32 @@ load_dotenv()
 
 main = Blueprint('main', __name__)
 
-BUCKET_NAME = 'l769ab'
-ALLOWED_EXTENSIONS = {'zip', 'rar', 'ZIP'}
-
+BUCKET_NAME = os.getenv('S3_BUCKET_NAME')
+ALLOWED_EXTENSIONS = set(os.getenv('ALLOWED_EXTENSIONS', 'zip,rar').split(','))
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def check_processing_server_status():
+    try:
+        response = requests.get(os.getenv('PROCESSING_SERVER_STATUS_URL'))
+        if response.status_code == 200 and response.json().get("status") == "active":
+            return True
+        else:
+            return False
+    except requests.exceptions.RequestException as e:
+        app.logger.error(f"Erro ao verificar status do servidor: {e}")
+        return False
+
+def start_processing_server(instance_id):
+    try:
+        ec2_client = boto3.client('ec2', region_name=os.getenv('AWS_REGION'))
+        response = ec2_client.start_instances(InstanceIds=[instance_id])
+        app.logger.info(f"Iniciando a instância: {instance_id}")
+        return True
+    except Exception as e:
+        app.logger.error(f"Erro ao iniciar o servidor de processamento: {e}")
+        return False
 
 
 @main.route('/')
@@ -137,7 +157,7 @@ def upload_file():
 
                 return jsonify(
                     {'success': False, 'message': 'Saldo insuficiente. Por favor, gere um PIX para continuar.',
-                     'file_id': new_file.id, 'custo': cost / 100})
+                     'file_id': new_file.id, 'custo': cost})
 
         except Exception as e:
             app.logger.error(f'Ocorreu um erro ao fazer o upload: {str(e)}')
@@ -180,7 +200,24 @@ def generate_pix(file_id):
         if 'pixQrCode' in charge and 'qrCodeImage' in charge['pixQrCode']:
             qr_code = charge['pixQrCode']['qrCodeImage']
 
+            # Registrar a transação na tabela Transaction
+            new_transaction = Transaction(
+                user_id=current_user.id,
+                amount=valor_em_centavos,
+                file_id=file_id,
+                timestamp=db.func.now(),
+                status='Pendente',
+                correlation_id=payload['correlationID'],
+                description=f"Pagamento do arquivo {file_id}",
+                payment_type="PIX",
+                reference=f"Arquivo {file_id}"
+            )
+            db.session.add(new_transaction)
+            db.session.commit()
+
+            # Atualizar o arquivo com o QR Code gerado
             file.qr_code = qr_code
+            file.status = 'Aguardando Confirmação'
             db.session.commit()
 
             return jsonify({'qr_code': qr_code})
@@ -247,6 +284,13 @@ def handle_webhook():
         transaction = Transaction.query.filter_by(correlation_id=correlation_id).first()
         if transaction:
             transaction.status = 'Concluído'
-            db.session.commit()
+            file = File.query.get(transaction.file_id)
+            if file:
+                file.status = 'Pagamento Confirmado'
+                db.session.commit()
+
+                if not check_processing_server_status():
+                    if not start_processing_server(os.getenv('EC2_INSTANCE_ID')):
+                        return jsonify({'error': 'Erro ao iniciar o servidor de processamento.'}), 500
 
     return jsonify({'status': 'success'}), 200

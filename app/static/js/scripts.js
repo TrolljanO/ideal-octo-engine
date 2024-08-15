@@ -1,25 +1,33 @@
 $(document).ready(function () {
     // Navbar animation
-    setTimeout(function () { test(); });
+    setTimeout(() => {
+        this.showToast = false;
+    }, 5000);
+});
 
-    $(window).on('resize', function () {
-        setTimeout(function () { test(); }, 500);
-    });
+$(window).on('resize', function () {
+    setTimeout(() => {
+        this.showToast = false;
+    }, 5000);
+});
 
-    $(".navbar-toggler").click(function () {
-        $(".navbar-collapse").slideToggle(300);
-        setTimeout(function () { test(); });
-    });
+$(".navbar-toggler").click(function () {
+    $(".navbar-collapse").slideToggle(300);
+    setTimeout(() => {
+        this.showToast = false;
+    }, 5000);
+});
 
-    // Configuração do MaskMoney
-    $('#amount').maskMoney({
-        prefix: 'R$ ',
-        allowNegative: false,
-        thousands: '.',
-        decimal: ',',
-        affixesStay: true,
-        precision: 2
-    });
+// Configuração do MaskMoney
+$('#amount').maskMoney({
+    prefix: 'R$ ',
+    allowNegative: false,
+    thousands: '.',
+    decimal: ',',
+    affixesStay: true,
+    precision: 2
+});
+
 
     // Formulário de recarga via PIX
     $('#recharge-form').on('submit', function(e) {
@@ -79,7 +87,7 @@ $(document).ready(function () {
 
         xhr.send(formData);
     });
-});
+
 
 function showPixModal(file_id, cost) {
     let costInReais = (cost / 100).toFixed(2);
@@ -136,3 +144,26 @@ function generateUUID() {
         return v.toString(16);
     });
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+
+    // Verifica se já existe um tema salvo no localStorage
+    const currentTheme = localStorage.getItem('theme');
+    if (currentTheme) {
+        body.classList.add(currentTheme);
+        themeToggle.checked = currentTheme === 'dark-mode';
+    }
+
+    // Alterna o tema quando o switch é clicado
+    themeToggle.addEventListener('change', function() {
+        if (this.checked) {
+            body.classList.add('dark-mode');
+            localStorage.setItem('theme', 'dark-mode');
+        } else {
+            body.classList.remove('dark-mode');
+            localStorage.setItem('theme', 'light-mode');
+        }
+    });
+});

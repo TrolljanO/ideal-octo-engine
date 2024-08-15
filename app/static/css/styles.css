@@ -1,228 +1,484 @@
+
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 
 body {
-    font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
 
 * {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 i {
-    margin-right: 10px;
+  margin-right: 10px;
 }
 
 /*----------navbar-css------------*/
 .navbar-logo {
-    padding: 15px;
-    color: #fff;
+  padding: 15px;
+  color: #ffffff;
+  text-shadow: 1px 1px 3px #000000;
 }
 
 .navbar-mainbg {
-    background-color: #5161ce;
-    padding: 0px;
+  background-color: rgba(76, 125, 171, 0.62); /* Ajustado para distinguir do fundo */
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,.2);
+}
+
+.navbar-mainbg .nav-item {
+  padding: 0px;
+  color: rgba(255, 255, 255, 0);
 }
 
 #navbarNav {
-    overflow: hidden;
-    position: relative;
+  overflow: hidden;
+  position: relative;
+  color: #ffffff;
 }
 
 #navbarNav ul {
-    padding: 0px;
-    margin: 0px;
+  padding: 0px;
+  margin: 0px;
 }
 
 #navbarNav ul li a i {
-    margin-right: 10px;
+  margin-right: 10px;
 }
 
 #navbarNav li {
-    list-style-type: none;
-    float: left;
+  list-style-type: none;
+  float: left;
 }
 
 #navbarNav ul li a {
-    color: rgba(255, 255, 255, 0.5);
-    text-decoration: none;
-    font-size: 15px;
-    display: block;
-    padding: 20px 20px;
-    transition-duration: 0.6s;
-    transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    position: relative;
+  color: #FFFFFF;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  text-decoration: none;
+  font-size: 15px;
+  display: block;
+  padding: 20px 20px;
+  transition-duration: 0.6s;
+  transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  position: relative;
+  border-radius: 20px;
 }
 
 #navbarNav>ul>li.active>a {
-    color: #5161ce;
-    background-color: transparent;
-    transition: all 0.7s;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  background-color: transparent;
+  transition: all 0.7s;
+  border-radius: 20px;
 }
 
 #navbarNav a:not(:only-child):after {
-    content: "\f105";
-    position: absolute;
-    right: 20px;
-    top: 10px;
-    font-size: 14px;
-    font-family: "Font Awesome 5 Free";
-    display: inline-block;
-    padding-right: 3px;
-    vertical-align: middle;
-    font-weight: 900;
-    transition: 0.5s;
+  content: "\f105";
+  position: absolute;
+  right: 20px;
+  top: 10px;
+  font-size: 14px;
+  font-family: "Font Awesome 5 Free";
+  display: inline-block;
+  padding-right: 3px;
+  vertical-align: middle;
+  font-weight: 900;
+  transition: 0.5s;
+  border-radius: 20px;
 }
 
 #navbarNav .active>a:not(:only-child):after {
-    transform: rotate(90deg);
+  transform: rotate(90deg);
 }
 
 .hori-selector {
-    display: inline-block;
-    position: absolute;
-    height: 100%;
-    top: 0px;
-    left: 0px;
-    transition-duration: 0.6s;
-    transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    background-color: #fff;
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-    margin-top: 10px;
+  display: inline-block;
+  position: absolute;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  transition-duration: 0.6s;
+  transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  background-color: #F68F2A;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  margin-top: 10px;
 }
 
 .hori-selector .right,
 .hori-selector .left {
-    position: absolute;
-    width: 25px;
-    height: 25px;
-    background-color: #fff;
-    bottom: 10px;
-}
-
-.hori-selector .right {
-    right: -25px;
-}
-
-.hori-selector .left {
-    left: -25px;
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  background-color: #00f1ff;
+  bottom: 10px;
+  border-radius: 20px;
 }
 
 .hori-selector .right:before,
 .hori-selector .left:before {
-    content: '';
-    position: absolute;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-color: #5161ce;
+  content: '';
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #FFFFFF;
 }
 
-.hori-selector .right:before {
-    bottom: 0;
-    right: -25px;
+.navbar-toggler {
+  border: none;
+  background-color: #268E91;
+  outline: none;
 }
 
-.hori-selector .left:before {
-    bottom: 0;
-    left: -25px;
+.navbar-toggler-icon {
+  background-image: none;
+  content: '\f0c9';
+  font-family: 'Font Awesome 5 Free', solid;
+  font-weight: 900;
+  color: var(--text-color);
 }
 
-@media(min-width: 992px) {
-    .navbar-expand-custom {
-        -ms-flex-flow: row nowrap;
-        flex-flow: row nowrap;
-        -ms-flex-pack: start;
-        justify-content: flex-start;
-    }
-
-    .navbar-expand-custom .navbar-nav {
-        -ms-flex-direction: row;
-        flex-direction: row;
-    }
-
-    .navbar-expand-custom .navbar-toggler {
-        display: none;
-    }
-
-    .navbar-expand-custom .navbar-collapse {
-        display: -ms-flexbox !important;
-        display: flex !important;
-        -ms-flex-preferred-size: auto;
-        flex-basis: auto;
-    }
+/* Garante que o menu só colapse em telas pequenas */
+@media (min-width: 992px) {
+  .navbar-collapse {
+    display: flex !important;
+    justify-content: space-between;
+  }
 }
 
-@media (max-width: 991px) {
-    #navbarNav ul li a {
-        padding: 12px 30px;
-    }
-
-    .hori-selector {
-        margin-top: 0px;
-        margin-left: 10px;
-        border-radius: 0;
-        border-top-left-radius: 25px;
-        border-bottom-left-radius: 25px;
-    }
-
-    .hori-selector .left,
-    .hori-selector .right {
-        right: 10px;
-    }
-
-    .hori-selector .left {
-        top: -25px;
-        left: auto;
-    }
-
-    .hori-selector .right {
-        bottom: -25px;
-    }
-
-    .hori-selector .left:before {
-        left: -25px;
-        top: -25px;
-    }
-
-    .hori-selector .right:before {
-        bottom: -25px;
-        left: -25px;
-    }
-}
-
-/* Estilos para a overlay com blur */
-.progress-overlay {
+/* Botão de alternância de tema */
+.theme-toggle {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.7);
-    z-index: 9999;
+    top: 100px;
+    left: 20px; /* Mudado para a esquerda */
+    z-index: 1000;
+}
+
+.theme-toggle input {
+    display: none;
+}
+
+.theme-toggle label {
+    cursor: pointer;
+    background-color: rgb(50, 50, 50);
+    border-radius: 20px;
+    padding: 10px 20px;
+    color: #FFAEOI;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.theme-toggle label:before {
+    content: '\f186'; /* Ícone de lua para o modo escuro */
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    margin-right: 10px;
+    color: white;
+}
+
+.theme-toggle input:checked + label {
+    background-color: #d5d5d5; /* Cor do fundo no modo escuro */
+}
+
+.theme-toggle input:checked + label:before {
+    content: '\f185'; /* Ícone de sol para o modo claro */
+    color: yellow;
+}
+
+
+/* Cabeçalhos de tabelas e destaques */
+.card-header, .thead-light {
+    background-color: #91b4d5;
+    color: #FFFFFF;
+}
+
+/* Remove o arredondamento do cabeçalho da tabela */
+.table thead th:first-child {
+    border-top-left-radius: 0;
+}
+
+.table thead th:last-child {
+    border-top-right-radius: 0;
+}
+
+/* Faz com que as células da tabela e o cabeçalho se alinhem perfeitamente */
+.table-bordered th,
+.table-bordered td {
+    border-color: rgba(145, 180, 213, 0.3);
+    border-width: 1px;
+    border-style: solid;
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Alinha o fundo do cabeçalho com o das células */
+.table th {
+    background-color: #91b4d5;
+    color: #FFFFFF;
+    border-bottom: 2px solid rgba(137, 173, 206, 0.21); /* Cria uma linha divisória mais clara */
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+
+.table td {
+    background-color: rgba(255, 255, 255, 0.6);
+    color: #000000;
+}
+
+/* Mantém o arredondamento apenas nas extremidades da tabela */
+.table {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 2px 2px 10px 1px rgba(0, 0, 0, 0.5);
+}
+
+/* Fundo da página */
+body, .container, .box {
+    background-color: rgba(218, 232, 252, 0);
+}
+
+/* Sombra no texto para melhor leitura */
+.navbar-logo, h1, h2, h3, h4, h5, h6, .navbar-nav a, .btn, .card-header, .thead-light th, .table th {
+    text-shadow: 2px 2px 3px rgb(0, 0, 0);
+    font-weight: 700;
+}
+
+/* Aplicando border-radius de 10px a tabelas, boxes, divs e outros elementos */
+.table, .box, .card, .progress-bar, .theme-toggle label, .modal-content, .form-control, .table thead {
+    border-radius: 10px;
+    border: rgb(0, 0, 0) 1px;
+    box-shadow: 2px 2px 10px 1px rgba(0, 0, 0, 0.5);
+}
+
+.box {
+    background-color: rgba(255, 255, 255, 0.6);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 2px 2px 10px 1px rgba(0, 0, 0, 0.5);
+    margin-bottom: 20px;
+}
+
+.glass {
+    background: rgba(255, 255, 255, 0.6); /* Transparente para efeito de "vidro" */
+    border-radius: 10px;
+}
+
+/* Esquema de cores do modo escuro */
+.dark-mode {
+    background-color: #232937; /* Cor de fundo */
+    color: #e4f0fb; /* Cor do texto */
+}
+
+.modal, .modal-content, .modal-body, .modal-header {
+    background-color: #232937;
+    color: #e4f0fb;
+}
+
+.dark-mode .navbar-mainbg {
+    background-color: rgba(39, 232, 167, 0.8); /* Cor da Navbar */
+    color: #ffffff; /* Texto em branco na Navbar */
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Sombra preta com blur no texto */
+}
+
+.dark-mode .navbar-logo {
+    background-color: transparent; /* Remove o fundo */
+    color: #ffffff; /* Texto branco */
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Sombra preta no texto */
+    padding: 15px;
+}
+
+.dark-mode .card-header,
+.dark-mode .thead-light {
+    background-color: rgba(39, 232, 167, 0.8); /* Cor dos cabeçalhos */
+    color: #ffffff; /* Texto branco */
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7); /* Sombra no texto */
+}
+
+.dark-mode .card,
+.dark-mode .box {
+    background-color: #232937; /* Cor de fundo para cartões e boxes */
+    color: #e4f0fb; /* Cor do texto */
+    border-color: #91b4d5; /* Linhas e detalhes */
+}
+
+.dark-mode .table th {
+    background-color: rgba(39, 232, 167, 0.8); /* Cabeçalho da tabela */
+    color: #e3e3e3; /* Texto branco */
+    text-shadow: 2px 2px 10px 1px rgba(0, 0, 0, 0.5); /* Sombra no texto */
+}
+
+.dark-mode .table td {
+    background-color: #232937; /* Células da tabela */
+    color: #e4f0fb; /* Texto nas células */
+    border-color: rgba(145, 180, 213, 0.4); /* Linhas e detalhes */
+}
+
+.dark-mode .table tr {
+
+}
+
+.dark-mode .btn-primary,
+.dark-mode #recharge-btn,
+.dark-mode .btn-warning,
+.dark-mode #confirmPixBtn,
+.dark-mode #cancelPixBtn {
+    background-color: rgba(39, 232, 167, 0.8); /* Cor dos botões */
+    border-color: rgba(39, 232, 167, 0);
+    color: #ffffff; /* Texto escuro para contraste */
+    text-shadow: 1px 2px 1.5px rgba(0,0,0,0.85);
+}
+
+.dark-mode .btn-primary:hover,
+.dark-mode .btn-warning:hover,
+.dark-mode #confirmPixBtn:hover,
+.dark-mode #cancelPixBtn:hover {
+    background-color: #1eb58a; /* Cor mais escura ao passar o mouse */
+    border-color: #1eb58a;
+    color: #ffffff; /* Texto escuro para contraste */
+    text-shadow: 1px 2px 1.5px rgba(0,0,0,0.85);
+}
+
+/* Ajustes para ícones, textos e outros detalhes */
+.dark-mode i,
+.dark-mode .navbar-nav a {
+    color: #e4f0fb; /* Cor dos ícones e textos na Navbar */
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7); /* Sombra preta com blur */
+}
+
+/* Detalhes pequenos, linhas, e bordas */
+.dark-mode .table-bordered td,
+.dark-mode {
+    border-color: rgba(145, 180, 213, 0.1); /* Cor da borda */
+    background-color: #232937; /* Remove as lacunas em branco */
+}
+
+.progress {
+    background-color: rgba(109, 130, 173, 0.05);
+}
+
+.progress-bar {
+    background-color: #1eb58a;
+    border-color: rgba(145, 180, 213, 0.1); /* Cor da borda */
+}
+
+.dark-mode .form-control {
+    background-color: rgb(200, 200, 200); /* Cor de fundo para inputs */
+    color: rgba(0, 0, 0, 0.7); /* Texto nos inputs */
+    border-color: rgba(145, 180, 213, 0.3); /* Cor da borda */
+}
+
+.dark-mode input[type=file]::file-selector-button {
+  border: 2px solid rgba(81, 168, 173, 0);
+  background-color: rgba(12, 68, 51, 0.66);
+  transition: 1s;
+  color: #FFFFFF;
+}
+
+.dark-mode input[type=file]::file-selector-button:hover {
+  text-color: #FFFFFF;
+  background-color: #4159ce;
+  border: 2px solid #00cec9;
+}
+
+/* Remover fundo branco indesejado */
+.dark-mode .card,
+.dark-mode .box,
+.dark-mode .table,
+.dark-mode .container.mt-4 {
+    background-color: #232937; /* Cor de fundo para caixas e tabelas */
+    border-radius: 10px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Mantém as sombras */
+}
+
+/* Ajustes para ícones, textos e outros detalhes */
+.dark-mode i, .dark-mode .navbar-nav a {
+    color: #FFFFFF;
+}
+
+.dark-mode .table th {
+  border-bottom-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+#container-login {
+    min-width: 70vw;
+    min-height: 70vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    backdrop-filter: blur(5px);
+    background-color: rgba(145, 180, 213, 0.26);
+
 }
 
-#profile-img {
-    border-bottom-right-radius: 10px;
-    border-top-left-radius: 10px;
+
+.main-login {
+    background-color: rgba(145, 180, 213, 0.26);
 }
 
-#amount #recharge-btn{
+#card-body-login {
+    background: rgba(145, 180, 213, 0.62);
+    font-weight: 600;
+    color: #FFFFFF;
+    text-shadow: 1px 1px 3px rgb(0, 0, 0);
+}
+
+.btn-signup {
+    color: darkblue;
+    text-shadow: 1px 1px 3px #FFFFFF;
+}
+
+#login-card {
+   	position: relative;
+   	margin: 80px auto;
+   	width: 30vw;
+   	height: auto;
+    background-color: rgba(0, 0, 0, 0);
+    border-radius: 20px;
+}
+
+
+.btn-warning, #recharge-btn, #confirmPixBtn, #cancelPixBtn {
+    color: #FFFFFF;
+    text-shadow: 2px 1px 3px 20px black;
+    margin: 1%;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.btn-warning {
+    border-style: none;
+    border: 1px rgba(0, 0, 0, 0.31);
+    box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, 0.6);
+}
+
+#addCredits {
     position: relative;
-    object-position: center;
+    display: flex;
+    max-width: 30vw;
+}
+
+#recharge-btn {
+    margin-top: 20px;
+    margin-left: 200px;
+    background-color: green;
+    border-style: none;
+    border: 1px green;
+    box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, 0.6);
 }
 
 #amount {
-    max-width: 40%;
+    background-color: #FFFFFF;
+    border: 1px rgba(0, 0, 0, 0.18);
+    border-style: solid;
+    text-align: center;
+    justify-items: center;
 }
 
-#pixQRCode {
-    max-width: 100%;
-    height: auto;
-    width: 300px;
+.title2 {
+    color: #FFFFFF;
+    text-shadow: 1px 1px 10px 5px rgba(0, 0, 0, 0.6);
 }
