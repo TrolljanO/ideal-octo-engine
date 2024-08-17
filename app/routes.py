@@ -19,9 +19,12 @@ main = Blueprint('main', __name__)
 
 BUCKET_NAME = os.getenv('S3_BUCKET_NAME')
 ALLOWED_EXTENSIONS = set(os.getenv('ALLOWED_EXTENSIONS', 'zip,rar').split(','))
+instance_id = os.getenv('EC2_INSTANCE_ID')
+
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 def check_processing_server_status():
     try:
@@ -33,6 +36,7 @@ def check_processing_server_status():
     except requests.exceptions.RequestException as e:
         app.logger.error(f"Erro ao verificar status do servidor: {e}")
         return False
+
 
 def start_processing_server(instance_id):
     try:
@@ -255,11 +259,11 @@ def register_webhook():
     endpoint_url = os.getenv('WEBHOOK_URL')
     api_key = os.getenv('OPENPIX_API_KEY')
     headers = {
-        'Authorization': f'{api_key}',
+        # 'Authorization': f'{api_key}',
         'Content-Type': 'application/json'
     }
     payload = {
-        "name": "Webhook de Teste",
+        "name": "Webhook_Prod",
         "url": endpoint_url,
         "event": ["PIX_RECEIVED"]
     }
