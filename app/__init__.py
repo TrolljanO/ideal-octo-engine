@@ -6,7 +6,10 @@ from config import Config
 import pymysql
 import logging
 from logging.handlers import RotatingFileHandler
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 pymysql.install_as_MySQLdb()
 db = SQLAlchemy()
 migrate = Migrate()
@@ -17,10 +20,18 @@ login.login_view = 'auth.login'
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI')
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['SQLALCHEMY_ECHO'] = True
 
     db.init_app(app)
     migrate.init_app(app, db)
     login.init_app(app)
+
+    if __name__ == '__main__':
+        logging.basicConfig()
+        logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
+        app.run(debug=True)
 
     if not app.debug:
         # Log de erros

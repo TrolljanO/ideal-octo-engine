@@ -16,6 +16,9 @@ def login_post():
     password = request.form.get('password')
     remember = True if request.form.get('remember') else False
 
+    print(f"Email recebido: {email}")
+    print(f"Password recebido: {password}")
+
     user = User.query.filter_by(email=email).first()
 
     if not user or not check_password_hash(user.password, password):
@@ -23,6 +26,7 @@ def login_post():
         return redirect(url_for('auth.login'))
 
     login_user(user, remember=remember)
+    flash('Login realizado com sucesso!', 'success')
     return redirect(url_for('main.index'))
 
 @auth.route('/signup', methods=['GET'])

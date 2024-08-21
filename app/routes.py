@@ -28,19 +28,37 @@ def allowed_file(filename):
 
 def check_processing_server_status():
     try:
-        response = requests.get(os.getenv('PROCESSING_SERVER_STATUS_URL'))
-        if response.status_code == 200 and response.json().get("status") == "active":
-            return True
+        ec2_client = boto3.client('ec2', region_name=os.getenv('AWS_REGION'))
+        response = ec2_client.describe_instance_status(InstanceIds=[os.getenv('EC2_INSTANCE_ID')])
+
+        if response['InstanceStatuses']:
+            instance_state = response['InstanceStatuses'][0]['InstanceState']['Name']
+            if instance_state == 'running':
+                return True
+            else:
+                return False
         else:
             return False
-    except requests.exceptions.RequestException as e:
-        app.logger.error(f"Erro ao verificar status do servidor: {e}")
+
+    except Exception as e:
+        app.logger.error(f"Erro ao verificar status da instância: {e}")
         return False
 
 
-def start_processing_server(instance_id):
+def start_processing_server():
     try:
-        ec2_client = boto3.client('ec2', region_name=os.getenv('AWS_REGION'))
+        # Cliente EC2 usando credenciais e região do ambiente
+        ec2_client = boto3.client(
+            'ec2',
+            region_name=os.getenv('AWS_DEFAULT_REGION'),
+            aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+            aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
+        )
+
+        # ID da instância EC2 especificada no ambiente
+        instance_id = os.getenv('EC2_INSTANCE_ID')
+
+        # Envia o comando para iniciar a instância EC2
         response = ec2_client.start_instances(InstanceIds=[instance_id])
         app.logger.info(f"Iniciando a instância: {instance_id}")
         return True
@@ -125,11 +143,14 @@ def upload_file():
         return jsonify({'error': 'Nenhum arquivo foi selecionado.'}), 400
 
     if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
+        # Renomeia o arquivo para um UUID para evitar conflitos
+        original_filename = secure_filename(file.filename)
+        filename = f"{uuid.uuid4().hex}_{original_filename}"
+
         try:
             with zipfile.ZipFile(BytesIO(file.read()), 'r') as zip_ref:
                 num_folders = sum(1 for z in zip_ref.namelist() if z.endswith('/'))
-            cost = num_folders * 100  # Multiplicado por 100 para converter para centavos
+            cost = num_folders * 100
 
             user = current_user
 
@@ -137,7 +158,7 @@ def upload_file():
                 user.credits -= cost
                 db.session.commit()
 
-                file.seek(0)
+                file.seek(0)  # Reseta o ponteiro do arquivo para o início
                 s3_key = f"{current_user.id}/{filename}"
                 s3.upload_fileobj(
                     file,
@@ -147,15 +168,18 @@ def upload_file():
                 )
 
                 new_file = File(user_id=current_user.id, filename=filename, s3_key=s3_key,
-                                status='Em Processamento', cost=cost)
+                                status='Em Processamento', cost=cost, statusPago=True)
                 db.session.add(new_file)
                 db.session.commit()
+
+                # Inicia a instância EC2 após a confirmação do pagamento
+                start_processing_server(instance_id)
 
                 return jsonify(
                     {'success': True, 'message': 'Processamento autorizado e iniciado.', 'file_id': new_file.id})
             else:
                 new_file = File(user_id=current_user.id, filename=filename, s3_key='',
-                                status='Aguardando Pagamento', cost=cost)
+                                status='Aguardando Pagamento', cost=cost, statusPago=False)
                 db.session.add(new_file)
                 db.session.commit()
 
@@ -291,6 +315,7 @@ def handle_webhook():
             file = File.query.get(transaction.file_id)
             if file:
                 file.status = 'Pagamento Confirmado'
+                file.statusPago = True
                 db.session.commit()
 
                 if not check_processing_server_status():
@@ -298,3 +323,4 @@ def handle_webhook():
                         return jsonify({'error': 'Erro ao iniciar o servidor de processamento.'}), 500
 
     return jsonify({'status': 'success'}), 200
+

@@ -10,9 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
-
-<body class="light-mode">
-{#    {% if current_user.is_authenticated %}#}
+<body>
     <div class="theme-toggle">
         <input type="checkbox" id="themeToggle">
         <label for="themeToggle"></label>
@@ -39,18 +37,11 @@
             </ul>
         </div>
     </nav>
-{#    {% endif %}#}
-    <!-- Seu conteúdo principal -->
-
+    <!-- Conteúdo principal -->
     <div class="container mt-4">
         {% block content %}
-            <!-- Botão de alternância de tema -->
-
-        <!-- O conteúdo específico da página será inserido aqui -->
         {% endblock %}
-
     </div>
-
     <!-- Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>

@@ -5,7 +5,7 @@ from sqlalchemy.sql import func
 from . import db
 
 class User(UserMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     email = db.Column(db.String(255), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
     username = db.Column(db.String(255), nullable=False)
@@ -30,6 +30,9 @@ class Transaction(db.Model):
     def formatted_amount(self):
         return f"R$ {self.amount / 100:.2f}"
 
+from datetime import datetime
+from . import db
+
 class File(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -40,13 +43,15 @@ class File(db.Model):
     download_link = db.Column(db.String(255), nullable=True)
     cost = db.Column(db.Float, nullable=True)
     qr_code = db.Column(db.Text, nullable=True)
+    statusPago = db.Column(db.Boolean, nullable=False, default=False)
 
-    def __init__(self, user_id, filename, s3_key, status='Iniciando', cost=None):
+    def __init__(self, user_id, filename, s3_key, status='Iniciando', cost=None, statusPago=False):
         self.user_id = user_id
         self.filename = filename
         self.s3_key = s3_key
         self.status = status
         self.cost = cost
+        self.statusPago = statusPago
 
     def __repr__(self):
         return f'<File {self.filename}>'
