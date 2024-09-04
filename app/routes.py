@@ -12,6 +12,9 @@ import requests
 import uuid
 import http.client
 import json
+from functools import wraps
+import boto3
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 load_dotenv()
 
@@ -47,7 +50,6 @@ def check_processing_server_status():
 
 def start_processing_server():
     try:
-        # Cliente EC2 usando credenciais e região do ambiente
         ec2_client = boto3.client(
             'ec2',
             region_name=os.getenv('AWS_DEFAULT_REGION'),
@@ -55,10 +57,7 @@ def start_processing_server():
             aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
         )
 
-        # ID da instância EC2 especificada no ambiente
         instance_id = os.getenv('EC2_INSTANCE_ID')
-
-        # Envia o comando para iniciar a instância EC2
         response = ec2_client.start_instances(InstanceIds=[instance_id])
         app.logger.info(f"Iniciando a instância: {instance_id}")
         return True
@@ -67,12 +66,57 @@ def start_processing_server():
         return False
 
 
-@main.route('/')
-@login_required
-def index():
-    files_in_process = File.query.filter_by(user_id=current_user.id).order_by(File.upload_date.desc()).all()
-    return render_template('index.html', files_in_process=files_in_process, credits=current_user.credits)
+def validate_json_request(required_fields):
+    data = request.get_json()
+    if not data:
+        return None, jsonify({'error': 'Dados JSON ausentes.'}), 400
 
+    missing_fields = [field for field in required_fields if field not in data]
+    if missing_fields:
+        return None, jsonify({'error': f'Campos faltando: {", ".join(missing_fields)}'}), 400
+
+    return data, None
+
+
+def error_response(message, status_code=400):
+    return jsonify({'error': message}), status_code
+
+
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not current_user.is_admin:
+            return error_response('Permissão negada.', 403)
+        return f(*args, **kwargs)
+    return decorated_function
+
+
+@main.route('/api/limpa-pasta', methods=['GET'])
+@jwt_required()  # Protege a rota
+def index_limpa_pasta():
+    user_id = get_jwt_identity()  # Obtém a identidade do usuário a partir do token JWT
+    user = User.query.get(user_id)
+
+    return jsonify({
+        'message': 'Bem-vindo ao serviço Limpa Pasta',
+        'user': user.username,
+        'credits': user.credits
+    })
+
+@main.route('/api/finance', methods=['GET'])
+@jwt_required()
+def get_transactions():
+    user_id = get_jwt_identity()
+    transactions = Transaction.query.filter_by(user_id=user_id).all()
+
+    return jsonify({
+        'transactions': [{
+            'timestamp': t.timestamp,
+            'description': t.description,
+            'amount': t.amount,
+            'status': t.status
+        } for t in transactions]
+    })
 
 @main.route('/finance', methods=['GET', 'POST'])
 @login_required
@@ -82,7 +126,7 @@ def finance():
         user = current_user
 
         if not amount.isdigit():
-            return jsonify({'error': 'Valor inválido. Insira um número inteiro.'}), 400
+            return error_response('Valor inválido. Insira um número inteiro.')
 
         api_key = os.getenv('OPENPIX_API_KEY')
         headers = {
@@ -105,7 +149,7 @@ def finance():
                 qr_code = charge['pixQrCode']['qrCodeImage']
             else:
                 app.logger.error("Campo 'pixQrCode' não encontrado na resposta")
-                return jsonify({'error': 'Erro ao gerar cobrança. Verifique a resposta da API.'}), 500
+                return error_response('Erro ao gerar cobrança. Verifique a resposta da API.', 500)
 
             new_transaction = Transaction(
                 user_id=user.id,
@@ -122,10 +166,10 @@ def finance():
 
         except requests.exceptions.HTTPError as http_err:
             app.logger.error(f"HTTP error occurred: {http_err}")
-            return jsonify({'error': 'Erro ao gerar cobrança. Verifique a API Key e os parâmetros.'}), 500
+            return error_response('Erro ao gerar cobrança. Verifique a API Key e os parâmetros.', 500)
         except Exception as err:
             app.logger.error(f"Other error occurred: {err}")
-            return jsonify({'error': 'Erro ao gerar cobrança. Verifique a API Key e os parâmetros.'}), 500
+            return error_response('Erro ao gerar cobrança. Verifique a API Key e os parâmetros.', 500)
 
     transactions = Transaction.query.filter_by(user_id=current_user.id).order_by(Transaction.timestamp.desc()).all()
     return render_template('finance.html', transactions=transactions)
@@ -135,15 +179,14 @@ def finance():
 @login_required
 def upload_file():
     if 'file' not in request.files:
-        return jsonify({'error': 'Nenhum arquivo foi enviado.'}), 400
+        return error_response('Nenhum arquivo foi enviado.')
 
     file = request.files['file']
 
     if file.filename == '':
-        return jsonify({'error': 'Nenhum arquivo foi selecionado.'}), 400
+        return error_response('Nenhum arquivo foi selecionado.')
 
     if file and allowed_file(file.filename):
-        # Renomeia o arquivo para um UUID para evitar conflitos
         original_filename = secure_filename(file.filename)
         filename = f"{uuid.uuid4().hex}_{original_filename}"
 
@@ -158,7 +201,7 @@ def upload_file():
                 user.credits -= cost
                 db.session.commit()
 
-                file.seek(0)  # Reseta o ponteiro do arquivo para o início
+                file.seek(0)
                 s3_key = f"{current_user.id}/{filename}"
                 s3.upload_fileobj(
                     file,
@@ -172,8 +215,7 @@ def upload_file():
                 db.session.add(new_file)
                 db.session.commit()
 
-                # Inicia a instância EC2 após a confirmação do pagamento
-                start_processing_server(instance_id)
+                start_processing_server()
 
                 return jsonify(
                     {'success': True, 'message': 'Processamento autorizado e iniciado.', 'file_id': new_file.id})
@@ -189,17 +231,33 @@ def upload_file():
 
         except Exception as e:
             app.logger.error(f'Ocorreu um erro ao fazer o upload: {str(e)}')
-            return jsonify({'error': f'Ocorreu um erro ao fazer o upload: {str(e)}'}), 500
+            return error_response(f'Ocorreu um erro ao fazer o upload: {str(e)}', 500)
 
-    return jsonify({'error': 'Tipo de arquivo não permitido.'}), 400
+    return error_response('Tipo de arquivo não permitido.')
 
+@main.route('/files', methods=['GET'])
+@login_required
+def get_uploaded_files():
+    files_in_process = File.query.filter_by(user_id=current_user.id).order_by(File.upload_date.desc()).all()
+    files_list = [
+        {
+            'id': file.id,
+            'filename': file.filename,
+            'status': file.status,
+            'cost': file.cost,
+            'statusPago': file.statusPago,
+            'upload_date': file.upload_date
+        }
+        for file in files_in_process
+    ]
+    return jsonify({'files': files_list}), 200
 
 @main.route('/generate_pix/<int:file_id>', methods=['POST'])
 @login_required
 def generate_pix(file_id):
     file = File.query.get(file_id)
     if not file or file.status != 'Aguardando Pagamento':
-        return jsonify({'error': 'Arquivo não encontrado ou pagamento não necessário.'}), 400
+        return error_response('Arquivo não encontrado ou pagamento não necessário.')
 
     api_key = os.getenv('OPENPIX_API_KEY')
     headers = {
@@ -208,11 +266,13 @@ def generate_pix(file_id):
     }
 
     valor_em_centavos = int(file.cost)
+    if valor_em_centavos <= 0:
+        return error_response('O valor do arquivo não é válido.', 400)
 
     payload = {
         "name": f"Pagamento do arquivo {file_id}",
-        "correlationID": str(uuid.uuid4()),  # UUID único
-        "value": valor_em_centavos,  # Valor em centavos
+        "correlationID": str(uuid.uuid4()),
+        "value": valor_em_centavos,
         "comment": f"Pagto arquivo ID {file_id}"
     }
 
@@ -220,6 +280,10 @@ def generate_pix(file_id):
         conn = http.client.HTTPSConnection("api.openpix.com.br")
         conn.request("POST", "/api/v1/qrcode-static", json.dumps(payload), headers)
         response = conn.getresponse()
+
+        if response.status != 200:  # Verifica se a resposta HTTP é de sucesso
+            return error_response(f"Erro ao gerar o PIX. Status: {response.status}", response.status)
+
         data = response.read()
         charge = json.loads(data.decode("utf-8"))
 
@@ -228,7 +292,7 @@ def generate_pix(file_id):
         if 'pixQrCode' in charge and 'qrCodeImage' in charge['pixQrCode']:
             qr_code = charge['pixQrCode']['qrCodeImage']
 
-            # Registrar a transação na tabela Transaction
+            # Registro da transação
             new_transaction = Transaction(
                 user_id=current_user.id,
                 amount=valor_em_centavos,
@@ -243,22 +307,31 @@ def generate_pix(file_id):
             db.session.add(new_transaction)
             db.session.commit()
 
-            # Atualizar o arquivo com o QR Code gerado
+            # Atualizar o status do arquivo com o QR Code gerado
             file.qr_code = qr_code
             file.status = 'Aguardando Confirmação'
             db.session.commit()
 
             return jsonify({'qr_code': qr_code})
         else:
-            app.logger.error(f"Erro na resposta da API: {charge}")
-            return jsonify({'error': 'Erro ao gerar cobrança. Verifique a resposta da API.'}), 500
+            app.logger.error(f"Campo 'pixQrCode' ou 'qrCodeImage' não encontrado na resposta da API: {charge}")
+            return error_response('Erro ao gerar cobrança. Verifique a resposta da API.', 500)
+
+    except requests.exceptions.ConnectionError as conn_err:
+        app.logger.error(f"Erro de conexão: {conn_err}")
+        return error_response('Erro ao conectar à API OpenPix.', 500)
+
+    except requests.exceptions.Timeout as timeout_err:
+        app.logger.error(f"Erro de timeout: {timeout_err}")
+        return error_response('A requisição para a API OpenPix demorou muito para responder.', 500)
 
     except requests.exceptions.HTTPError as http_err:
-        app.logger.error(f"HTTP error occurred: {http_err}")
-        return jsonify({'error': 'Erro ao gerar cobrança. Verifique a resposta da API.'}), 500
+        app.logger.error(f"Erro HTTP: {http_err}")
+        return error_response('Erro ao gerar cobrança. Verifique a API Key e os parâmetros.', 500)
+
     except Exception as err:
-        app.logger.error(f"Other error occurred: {err}")
-        return jsonify({'error': 'Erro ao gerar cobrança. Verifique a resposta da API.'}), 500
+        app.logger.error(f"Outro erro: {err}")
+        return error_response('Ocorreu um erro inesperado ao gerar o PIX.', 500)
 
 
 @main.route('/get_pix/<int:file_id>', methods=['GET'])
@@ -266,7 +339,7 @@ def generate_pix(file_id):
 def get_pix(file_id):
     file = File.query.get(file_id)
     if not file or not file.qr_code:
-        return jsonify({'error': 'QR Code não encontrado para este arquivo.'}), 404
+        return error_response('QR Code não encontrado para este arquivo.', 404)
 
     return jsonify({'qr_code': file.qr_code})
 
@@ -283,7 +356,6 @@ def register_webhook():
     endpoint_url = os.getenv('WEBHOOK_URL')
     api_key = os.getenv('OPENPIX_API_KEY')
     headers = {
-        # 'Authorization': f'{api_key}',
         'Content-Type': 'application/json'
     }
     payload = {
@@ -299,9 +371,9 @@ def register_webhook():
         return jsonify({'message': 'Webhook registrado com sucesso!', 'webhook_info': webhook_info})
 
     except requests.exceptions.HTTPError as http_err:
-        return jsonify({'error': f'HTTP error occurred: {http_err}'}), 500
+        return error_response(f'HTTP error occurred: {http_err}', 500)
     except Exception as err:
-        return jsonify({'error': f'Other error occurred: {err}'}), 500
+        return error_response(f'Other error occurred: {err}', 500)
 
 
 @main.route('/webhook', methods=['POST'])
@@ -319,8 +391,7 @@ def handle_webhook():
                 db.session.commit()
 
                 if not check_processing_server_status():
-                    if not start_processing_server(os.getenv('EC2_INSTANCE_ID')):
-                        return jsonify({'error': 'Erro ao iniciar o servidor de processamento.'}), 500
+                    if not start_processing_server():
+                        return error_response('Erro ao iniciar o servidor de processamento.', 500)
 
     return jsonify({'status': 'success'}), 200
-

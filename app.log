@@ -1,32 +1,47 @@
-2024-08-09 11:25:59,569 ERROR: Ocorreu um erro ao fazer o upload: I/O operation on closed file. [in C:\Users\T_J\PycharmProjects\ideal-octo-engine\app\routes.py:75]
-2024-08-09 11:26:13,571 ERROR: Ocorreu um erro ao fazer o upload: I/O operation on closed file. [in C:\Users\T_J\PycharmProjects\ideal-octo-engine\app\routes.py:75]
-2024-08-09 11:27:59,246 ERROR: Ocorreu um erro ao fazer o upload: I/O operation on closed file. [in C:\Users\T_J\PycharmProjects\ideal-octo-engine\app\routes.py:75]
-2024-08-09 15:21:24,205 ERROR: HTTP error occurred: 401 Client Error: Unauthorized for url: https://api.openpix.com.br/api/v1/charge [in C:\Users\T_J\PycharmProjects\ideal-octo-engine\app\routes.py:163]
-2024-08-09 15:28:28,587 ERROR: HTTP error occurred: 401 Client Error: Unauthorized for url: https://api.openpix.com.br/api/v1/charge [in C:\Users\T_J\PycharmProjects\ideal-octo-engine\app\routes.py:163]
-2024-08-09 15:28:42,243 ERROR: HTTP error occurred: 401 Client Error: Unauthorized for url: https://api.openpix.com.br/api/v1/charge [in C:\Users\T_J\PycharmProjects\ideal-octo-engine\app\routes.py:163]
-2024-08-09 15:35:30,821 ERROR: Other error occurred: 'paymentRequest' [in C:\Users\T_J\PycharmProjects\ideal-octo-engine\app\routes.py:166]
-2024-08-09 15:37:40,480 ERROR: Erro de valor: Campo 'paymentRequest' não encontrado na resposta [in C:\Users\T_J\PycharmProjects\ideal-octo-engine\app\routes.py:170]
-2024-08-09 15:37:54,677 ERROR: Erro de valor: Campo 'paymentRequest' não encontrado na resposta [in C:\Users\T_J\PycharmProjects\ideal-octo-engine\app\routes.py:170]
-2024-08-09 15:40:04,545 ERROR: Erro de valor: Campo 'paymentRequest' não encontrado na resposta [in C:\Users\T_J\PycharmProjects\ideal-octo-engine\app\routes.py:170]
-2024-08-09 15:40:12,712 ERROR: Erro de valor: Campo 'paymentRequest' não encontrado na resposta [in C:\Users\T_J\PycharmProjects\ideal-octo-engine\app\routes.py:170]
-2024-08-09 16:16:01,714 ERROR: HTTP error occurred: 404 Client Error: Not Found for url: https://api.openpix.com.br/api/v1/qrcode/pix/66b3ad1b5669dcd626dd9685 [in C:\Users\T_J\PycharmProjects\ideal-octo-engine\app\routes.py:167]
-2024-08-09 16:16:13,007 ERROR: HTTP error occurred: 404 Client Error: Not Found for url: https://api.openpix.com.br/api/v1/qrcode/pix/66b3ad1b5669dcd626dd9685 [in C:\Users\T_J\PycharmProjects\ideal-octo-engine\app\routes.py:167]
-2024-08-09 16:22:25,383 ERROR: HTTP error occurred: 404 Client Error: Not Found for url: https://api.openpix.com.br/api/v1/qrcode/pix/66b3ad1b5669dcd626dd9685 [in C:\Users\T_J\PycharmProjects\ideal-octo-engine\app\routes.py:164]
-2024-08-09 16:29:33,746 ERROR: HTTP error occurred: 404 Client Error: Not Found for url: https://api.openpix.com.br/api/v1/qrcode/pix/66b3ad1b5669dcd626dd9685 [in C:\Users\T_J\PycharmProjects\ideal-octo-engine\app\routes.py:164]
-2024-08-09 16:29:43,574 ERROR: HTTP error occurred: 404 Client Error: Not Found for url: https://api.openpix.com.br/api/v1/qrcode/pix/66b3ad1b5669dcd626dd9685 [in C:\Users\T_J\PycharmProjects\ideal-octo-engine\app\routes.py:164]
-2024-08-09 16:30:52,072 ERROR: HTTP error occurred: 404 Client Error: Not Found for url: https://api.openpix.com.br/api/v1/qrcode/pix/ [in C:\Users\T_J\PycharmProjects\ideal-octo-engine\app\routes.py:164]
-2024-08-09 16:31:11,367 ERROR: HTTP error occurred: 404 Client Error: Not Found for url: https://api.openpix.com.br/api/v1/qrcode/pix/ [in C:\Users\T_J\PycharmProjects\ideal-octo-engine\app\routes.py:164]
-2024-08-09 16:37:09,423 ERROR: HTTP error occurred: 404 Client Error: Not Found for url: https://api.openpix.com.br/api/v1/qrcode/pix/66b3ad1b5669dcd626dd9685 [in C:\Users\T_J\PycharmProjects\ideal-octo-engine\app\routes.py:169]
-2024-08-09 16:37:30,711 ERROR: HTTP error occurred: 404 Client Error: Not Found for url: https://api.openpix.com.br/api/v1/qrcode/pix/66b3ad1b5669dcd626dd9685 [in C:\Users\T_J\PycharmProjects\ideal-octo-engine\app\routes.py:169]
-2024-08-09 17:07:06,964 ERROR: Other error occurred: 'status' is an invalid keyword argument for Transaction [in C:\Users\T_J\PycharmProjects\ideal-octo-engine\app\routes.py:172]
-2024-08-09 17:09:19,910 ERROR: Other error occurred: 'status' is an invalid keyword argument for Transaction [in C:\Users\T_J\PycharmProjects\ideal-octo-engine\app\routes.py:172]
-2024-08-12 13:23:47,740 ERROR: HTTP error occurred: 400 Client Error: Bad Request for url: https://api.openpix.com.br/api/v1/qrcode-static [in C:\Users\T_J\PycharmProjects\ideal-octo-engine\app\routes.py:201]
-2024-08-12 13:47:38,320 ERROR: HTTP error occurred: 400 Client Error: Bad Request for url: https://api.openpix.com.br/api/v1/qrcode-static [in C:\Users\T_J\PycharmProjects\ideal-octo-engine\app\routes.py:201]
-2024-08-12 13:53:20,676 ERROR: HTTP error occurred: 400 Client Error: Bad Request for url: https://api.openpix.com.br/api/v1/qrcode-static [in C:\Users\T_J\PycharmProjects\ideal-octo-engine\app\routes.py:201]
-2024-08-12 14:05:14,948 ERROR: HTTP error occurred: 400 Client Error: Bad Request for url: https://api.openpix.com.br/api/v1/qrcode-static [in C:\Users\T_J\PycharmProjects\ideal-octo-engine\app\routes.py:201]
-2024-08-12 14:36:44,370 ERROR: HTTP error occurred: 400 Client Error: Bad Request for url: https://api.openpix.com.br/api/v1/qrcode-static [in C:\Users\T_J\PycharmProjects\ideal-octo-engine\app\routes.py:202]
-2024-08-12 14:45:23,401 ERROR: HTTP error occurred: 400 Client Error: Bad Request for url: https://api.openpix.com.br/api/v1/qrcode-static - {"error":"O comentário não pode exceder 35 caracteres"} [in C:\Users\T_J\PycharmProjects\ideal-octo-engine\app\routes.py:203]
-2024-08-12 17:00:37,261 ERROR: Ocorreu um erro ao fazer o upload: __init__() got an unexpected keyword argument 'status' [in C:\Users\T_J\PycharmProjects\ideal-octo-engine\app\routes.py:137]
-2024-08-12 17:17:13,487 ERROR: Other error occurred: 'pixQrCode' [in C:\Users\T_J\PycharmProjects\ideal-octo-engine\app\routes.py:178]
-2024-08-12 17:39:29,534 ERROR: Erro na resposta da API: {'charge': {'customer': None, 'value': 1900, 'comment': 'Pagto arquivo ID 5', 'identifier': 'dfaa2cda20574c9ba35b2af6caf64fef', 'correlationID': '3254a138-fbb0-455c-9b88-251e206ccb2f', 'paymentLinkID': 'f7db0f4f-a51f-4aba-9a4c-3b46af4770d8', 'transactionID': 'dfaa2cda20574c9ba35b2af6caf64fef', 'status': 'ACTIVE', 'additionalInfo': [], 'fee': 85, 'discount': 0, 'valueWithDiscount': 1900, 'expiresDate': '2024-08-13T20:44:53.884Z', 'type': 'DYNAMIC', 'createdAt': '2024-08-12T20:44:53.905Z', 'updatedAt': '2024-08-12T20:44:53.905Z', 'brCode': '00020101021226950014br.gov.bcb.pix2573api.openpix.com.br/api/testaccount/qr/v1/dfaa2cda20574c9ba35b2af6caf64fef520400005303986540519.005802BR5913FlowBoostTech6009Sao_Paulo62290525dfaa2cda20574c9ba35b2af6c6304628E', 'expiresIn': 86400, 'pixKey': 'b8ee632e-a1a8-4a69-a5e3-fcc2a16df207', 'paymentLinkUrl': 'https://openpix.com.br/pay/f7db0f4f-a51f-4aba-9a4c-3b46af4770d8', 'qrCodeImage': 'https://api.openpix.com.br/openpix/charge/brcode/image/f7db0f4f-a51f-4aba-9a4c-3b46af4770d8.png', 'globalID': 'Q2hhcmdlOjY2YmE3NDQ1YjljMDI0MTdjYzZhNWM4ZQ==', 'paymentMethods': {'pix': {'method': 'PIX_COB', 'transactionID': 'dfaa2cda20574c9ba35b2af6caf64fef', 'identifier': 'dfaa2cda20574c9ba35b2af6caf64fef', 'fee': 85, 'value': 1900, 'status': 'ACTIVE', 'txId': 'dfaa2cda20574c9ba35b2af6caf64fef', 'brCode': '00020101021226950014br.gov.bcb.pix2573api.openpix.com.br/api/testaccount/qr/v1/dfaa2cda20574c9ba35b2af6caf64fef520400005303986540519.005802BR5913FlowBoostTech6009Sao_Paulo62290525dfaa2cda20574c9ba35b2af6c6304628E', 'qrCodeImage': 'https://api.openpix.com.br/openpix/charge/brcode/image/f7db0f4f-a51f-4aba-9a4c-3b46af4770d8.png'}}}, 'correlationID': '3254a138-fbb0-455c-9b88-251e206ccb2f', 'brCode': '00020101021226950014br.gov.bcb.pix2573api.openpix.com.br/api/testaccount/qr/v1/dfaa2cda20574c9ba35b2af6caf64fef520400005303986540519.005802BR5913FlowBoostTech6009Sao_Paulo62290525dfaa2cda20574c9ba35b2af6c6304628E'} [in C:\Users\T_J\PycharmProjects\ideal-octo-engine\app\routes.py:177]
-2024-08-12 17:44:10,881 ERROR: Erro na resposta da API: {'charge': {'customer': None, 'value': 190000, 'comment': 'Pagto arquivo ID 6', 'identifier': '77f3efd117804cb5bb4881b3b4983ee1', 'correlationID': 'f3fe438b-79b6-4f2d-a571-df076cbaac97', 'paymentLinkID': '4b743c38-b284-4f4b-904d-f50d12c91eb5', 'transactionID': '77f3efd117804cb5bb4881b3b4983ee1', 'status': 'ACTIVE', 'additionalInfo': [], 'fee': 85, 'discount': 0, 'valueWithDiscount': 190000, 'expiresDate': '2024-08-13T20:49:35.226Z', 'type': 'DYNAMIC', 'createdAt': '2024-08-12T20:49:35.246Z', 'updatedAt': '2024-08-12T20:49:35.246Z', 'brCode': '00020101021226950014br.gov.bcb.pix2573api.openpix.com.br/api/testaccount/qr/v1/77f3efd117804cb5bb4881b3b4983ee152040000530398654071900.005802BR5913FlowBoostTech6009Sao_Paulo6229052577f3efd117804cb5bb4881b3b63043B22', 'expiresIn': 86400, 'pixKey': 'b8ee632e-a1a8-4a69-a5e3-fcc2a16df207', 'paymentLinkUrl': 'https://openpix.com.br/pay/4b743c38-b284-4f4b-904d-f50d12c91eb5', 'qrCodeImage': 'https://api.openpix.com.br/openpix/charge/brcode/image/4b743c38-b284-4f4b-904d-f50d12c91eb5.png', 'globalID': 'Q2hhcmdlOjY2YmE3NTVmZTViMDczODM5ZTBiYTlkZg==', 'paymentMethods': {'pix': {'method': 'PIX_COB', 'transactionID': '77f3efd117804cb5bb4881b3b4983ee1', 'identifier': '77f3efd117804cb5bb4881b3b4983ee1', 'fee': 85, 'value': 190000, 'status': 'ACTIVE', 'txId': '77f3efd117804cb5bb4881b3b4983ee1', 'brCode': '00020101021226950014br.gov.bcb.pix2573api.openpix.com.br/api/testaccount/qr/v1/77f3efd117804cb5bb4881b3b4983ee152040000530398654071900.005802BR5913FlowBoostTech6009Sao_Paulo6229052577f3efd117804cb5bb4881b3b63043B22', 'qrCodeImage': 'https://api.openpix.com.br/openpix/charge/brcode/image/4b743c38-b284-4f4b-904d-f50d12c91eb5.png'}}}, 'correlationID': 'f3fe438b-79b6-4f2d-a571-df076cbaac97', 'brCode': '00020101021226950014br.gov.bcb.pix2573api.openpix.com.br/api/testaccount/qr/v1/77f3efd117804cb5bb4881b3b4983ee152040000530398654071900.005802BR5913FlowBoostTech6009Sao_Paulo6229052577f3efd117804cb5bb4881b3b63043B22'} [in C:\Users\T_J\PycharmProjects\ideal-octo-engine\app\routes.py:178]
+2024-09-04 00:28:11,281 ERROR: Exception on /finance [GET] [in C:\Users\T_J\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py:838]
+Traceback (most recent call last):
+  File "C:\Users\T_J\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\T_J\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\T_J\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask_cors\extension.py", line 194, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\T_J\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\T_J\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\T_J\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask_login\utils.py", line 290, in decorated_view
+    return current_app.ensure_sync(func)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\T_J\PhpstormProjects\ideal-octo-engine\app\routes.py", line 160, in finance
+    return render_template('finance.html', transactions=transactions)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\T_J\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\T_J\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\T_J\AppData\Local\Programs\Python\Python311\Lib\site-packages\jinja2\environment.py", line 1304, in render
+    self.environment.handle_exception()
+  File "C:\Users\T_J\AppData\Local\Programs\Python\Python311\Lib\site-packages\jinja2\environment.py", line 939, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\T_J\PhpstormProjects\ideal-octo-engine\app\templates\finance.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "C:\Users\T_J\PhpstormProjects\ideal-octo-engine\app\templates\base.html", line 20, in top-level template code
+    <a class="navbar-brand navbar-logo" href="{{ url_for('main.index') }}">FlowBoost.TECH</a>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\T_J\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1084, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\T_J\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1073, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\T_J\AppData\Local\Programs\Python\Python311\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'main.index'. Did you mean 'main.finance' instead?
